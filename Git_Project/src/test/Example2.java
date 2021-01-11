@@ -28,7 +28,7 @@ public class Example2 {
 		
 		
 		
-		JButton btn = new JButton("입력하기");
+		JButton btn = new JButton("입력하기ㄱㄱ");
 		btn.addActionListener(new ActionListener() {    //버튼 클릭 함수설정
 			
 			@Override
