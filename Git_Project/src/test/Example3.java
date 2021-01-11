@@ -6,6 +6,8 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.*;
 
+
+///테이블 생성 지우고 추가하기 예제
 public class Example3 {
 
 	public static void main(String[] args) {

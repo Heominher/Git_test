@@ -4,6 +4,9 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
+
+
+///텍스트 박스로 값 라벨에 붙이기 얘제
 public class Example2 {
 
 	public static void main(String[] args) {
