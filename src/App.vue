@@ -11,7 +11,7 @@
 
 <script>
 import Header from './components/layout/Header.vue';
-import Footer from './components/layout/Footer.vue'
+import Footer from './components/layout/Footer.vue';
 
 export default {
   name: 'App',
@@ -32,10 +32,10 @@ export default {
   margin-top: 60px;
 }
 .mainStyle {
-  background-color: chartreuse;
+  background-color: rgb(161, 219, 192);
   width : 100%;
-  height : 47rem;
-  background-image : url(https://blog.kakaocdn.net/dn/DHa70/btqH7agcbWQ/qbFXl10WKf5T6WmsRVCv60/img.jpg);
-  background-size : 125rem 47rem;
+  height : 100%;
+  /* background-image : url(https://blog.kakaocdn.net/dn/DHa70/btqH7agcbWQ/qbFXl10WKf5T6WmsRVCv60/img.jpg); */
+  /* background-size : 125rem 47rem; */
 }
 </style>

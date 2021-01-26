@@ -4,7 +4,11 @@ import Home from './views/Home';
 import Numpage from './views/Numpage';
 import Bbspage from './views/Bbs';
 
+
+
 Vue.use(VueRouter);
+
+
 
 const router = new VueRouter({
 
@@ -22,7 +26,6 @@ const router = new VueRouter({
             component: Bbspage
         },
     ]
-
 });
 
 console.log("1111111111111");

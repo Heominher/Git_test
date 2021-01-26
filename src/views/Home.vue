@@ -4,35 +4,50 @@
         <h1>Home Page</h1>
         <br>
         <b-button variant="outline-success" @click="PlusData">Plus</b-button>
+        &nspn <b-button variant="outline-success" @click="PushData">Push</b-button>
         <br><br>
-
+		<input class="inputStyle" placeholder='NO 입력하기..' type="text" v-model="n1"/>
+		<input class="inputStyle" placeholder='제목 입력하기..' type="text" v-model="n2"/>
+		<!-- <input class="inputStyle" placeholder='날짜 입력하기..' type="text" v-model="n3"/> -->
+		<br><br>
+		<b-button pill variant="outline-danger" @click="insertbbs">추가하기</b-button>
+		<br><br>
         <div>
 			<table class="aaaaa">
 				<colgroup>
 					<col width="6%" />
 					<col width="40%" />
 					<col width="10%" />
-					<col width="10%" />
 				</colgroup>
-				<tr>
-					<th>no</th>
-					<th>제목</th>
-					<th>아이디</th>
-					<th>날짜</th>
+				<tr class="trtdStyle">
+					<th class="trtdStyle fontStyle">no</th>
+					<th class="trtdStyle fontStyle">제목</th>
+					<th class="trtdStyle fontStyle">작성일</th>
 				</tr>
-				<tr :key="i" v-for="(row, i) in options" >
-					<td>{{row.num}}</td>
-					<td class="txt_left"><a href="javascript:;">{{row.titime}}</a></td>
-					<td>{{row.writer}}</td>
-					<td>{{row.time}}</td>
+				<tr :key="i" v-for="(row, i) in paginatedData" class="trtdStyle">
+					<td class="trtdStyle fontStyle">{{row.bbs_id}}</td>
+					<!-- <td class="txt_left"><a href="/bbs">{{row.bbs_title}}</a></td> -->
+					<td class="txt_left trtdStyle fontStyle"><a :href="'/bbs?bbsid=' + row.bbs_id">{{row.bbs_title}}</a></td>
+					<td class="trtdStyle fontStyle">{{row.bbs_date.substring(0,10)}}</td>
 				</tr>
 			</table>
         </div>
+			<b-button variant="outline-success" @click="fnGetList">Get</b-button><br><br>
+			<b-button variant="outline-success" @click="startPage">처음</b-button>
+			<button :disabled="pageNum === 0" @click="prevPage" class="page-btn">
+				이전
+			</button>
+			<span class="page-count">{{ pageNum + 1 }} / {{ pageCount }} 페이지</span>
+			<button :disabled="pageNum >= pageCount - 1" @click="nextPage" class="page-btn">
+				다음
+			</button>
+			<b-button variant="outline-success" @click="finshPage">끝</b-button>
     </div>
 </template>
 <script>
+
+
 export default {
-    
     data(){ //=================데이터 선언하는 법
 		return{
 			num: "zzzz",
@@ -44,43 +59,149 @@ export default {
 				{num: "4", titime: "SUIOP", writer: "태안", time:"2020-12-15"},
 				{num: "5", titime: "Q", writer: "대구", time:"2020-12-16"},
 				{num: "6", titime: "QW", writer: "전주", time:"2020-12-17"},
-            ],
+			],
+			n1:"",
+			n2:"",
+			n3:"",
+			n4:"",
+			list:"",
+			//================페이징 변수==============//
+			pageSize: 5, //페이지 한개당 게시물 수 
+			pageNum: 0, //시작 페이지
+			totalPage: 0, //총 페이지 수
 		}
 	},//=================데이터 선언하는 법
 
-    
-    //watch: {//=================데이터 실시간으로 계속 감지
+
+	//watch: {//=================데이터 실시간으로 계속 감지
 		
 		//num(){   //변수명으로 만들기!
 		//	console.log(this.num);
 		//}
 		
 	//},//=================데이터 실시간으로 계속 감지 
+	
+	mounted() {//=================화면 시작전 함수 정의
+			this.fnGetList();
+	},//=================화면 시작전 함수 정의
 
 
-    methods: {//=================함수 정의 하는 법
-		
-		getData(){
-			alert(this.num);
-		},
-		setData(){
-            this.num = "gogogog";
-            console.log("1111111111111");
-        },
-		PlusData(){
-            this.options.push({num: "7", titime: "AAAA", writer: "대전", time:"2000-01-01"});
-            console.log("1111111111111");
-            
-        },
-        
-		
-		
-	}//=================함수 정의 하는 법
+methods: {//=================함수 정의 하는 법
+	getData(){
+		alert(this.num);
+	},
+	setData(){
+		this.num = "gogogog";
+		console.log("1111111111111");
+	},
+	PlusData(){
+		this.list.push({bbs_id: "7", bbs_title: "AAAA", bbs_date: "2000-01-01"});
+		console.log("1111111111111");   
+	},
+	PushData(){
+		this.list.push({bbs_id: this.n1, bbs_title: this.n2, bbs_date: this.n3});
+		this.n1 = "";
+		this.n2 = "";
+		this.n3 = "";
+	},
+	fnGetList() { //데이터 가져오기 함수
+		this.axios.get('http://localhost:4000/users') 
+		.then(res => { // 불러온 값을 Console에 뿌려줍니다. 
+		console.log(res.data) ;
+		this.list = res.data;
+		console.log(this.list.length);
+		})
+	},
+	insertbbs() {
+		var params = new URLSearchParams();
+		params.append('n1', this.n1);
+		params.append('n2', this.n2);
+		params.append('n3', this.n3);
+		this.axios.post('http://localhost:4000/bbs/insert',params)
+		.then((Resopnse) => {
+			console.log(Resopnse);
+			alert('추가하였습니다');
+			this.n1 = "";
+			this.n2 = "";
+			this.n3 = "";
+			this.fnGetList();
+		}).catch((ex)=>{
+			console.log(ex);
+			alert('실패했습니다');
+			this.n1 = "";
+			this.n2 = "";
+			this.n3 = "";
+		})
+	},
+	nextPage () {
+		this.pageNum += 1;
+	},
+	prevPage () {
+		this.pageNum -= 1;
+	},
+	startPage () {
+		this.pageNum = 0;
+	},
+	finshPage () {
+		this.pageNum = this.pageCount-1;
+	},
+},//=================함수 정의 하는 법
+	
+	
+computed: { //=================연산 정의 하는 법
+
+	pageCount () {
+      let listLeng = this.list.length,
+          listSize = this.pageSize,
+          page = Math.floor(listLeng / listSize);
+      if (listLeng % listSize > 0) page += 1;
+      return page;
+    },
+    paginatedData () {
+      const start = this.pageNum * this.pageSize,
+            end = start + this.pageSize;
+      return this.list.slice(start, end);
+    }
+  
+
+},//=================연산 정의 하는 법
+
+
 }
 </script>
 <style>
 .aaaaa {
-  /* background-color: chartreuse; */
+  background-color: #e0ffc2;
   margin: auto;
+  border: 3px solid #444444; 
+}
+.trtdStyle {
+  border: 3px solid #444444; 
+}
+.fontStyle {
+  font-size: 20px;
+}
+.btnStyle {
+  size: 300px;
+}
+.inputStyle {
+  background-color: blanchedalmond;
+  margin: 24px;
+  height: 56px;
+  width: 330px;
+  font-size: 23px;
+  border-radius: 10px;
+}
+.btn-cover {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+.btn-cover .page-btn {
+  width: 5rem;
+  height: 2rem;
+  letter-spacing: 0.5px;
+}
+.btn-cover .page-count {
+  padding: 0 1rem;
 }
 </style>

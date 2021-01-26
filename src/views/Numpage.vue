@@ -8,7 +8,7 @@
         <br><br><b-button variant="outline-success" @click="resetIamge">resetIamge</b-button><br><br>
         
         
-        <b-container fluid class="p-4 bg-dark">
+        <b-container>
             <b-row>
                 <b-col>
                 <b-img thumbnail fluid v-bind:style="{width: width, height: heigth}" :src="img1" alt="Image 1"></b-img>
@@ -26,6 +26,8 @@
 
 </template>
 <script>
+
+
 export default {
 
 
