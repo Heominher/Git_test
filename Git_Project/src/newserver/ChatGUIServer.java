@@ -6,6 +6,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -73,7 +78,14 @@ public class ChatGUIServer {
 	        closebtn.setFont(new Font("고딕", Font.BOLD, 20));
 	        closebtn.setForeground(Color.white);
 	        
+	        JButton clearbtn = new JButton("콘솔 Clear");
+	        clearbtn.setOpaque(true);
+	        clearbtn.setBackground(Color.black);
+	        clearbtn.setFont(new Font("고딕", Font.BOLD, 20));
+	        clearbtn.setForeground(Color.white);
+	        
 	        top.add(closebtn);
+	        top.add(clearbtn);
     		
     		JLabel label0 = new JLabel("");
     		label0.setFont(new Font("고딕", Font.BOLD, 25));
@@ -101,7 +113,8 @@ public class ChatGUIServer {
     		label2.setFont(new Font("고딕", Font.BOLD, 25));
     		label2.setForeground(Color.blue);
     		
-    		txtLog.setForeground(Color.pink);
+    		txtLog.setForeground(Color.white);
+    		txtLog.setBackground(Color.black);
     		txtLog.setFont(new Font("고딕", Font.BOLD, 25));
     		txtLog.setEditable(false);
     		JScrollPane scrollPane = new JScrollPane(txtLog);
@@ -124,6 +137,14 @@ public class ChatGUIServer {
 					System.exit(0);
 				}
 			});
+    		
+    		clearbtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					txtLog.setText("");
+				}
+			});
+    		
             
             // 서버 가동: 클라이언트가 접속할 때까지 기다리는 것(무한 대기)
             while (true) {

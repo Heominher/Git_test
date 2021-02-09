@@ -86,25 +86,33 @@ public class ChatGUIClient extends JFrame implements ActionListener, Runnable {
         ta.setOpaque(true);
         ta.setFont(new Font("고딕",Font.BOLD,15));
         ta1.setFont(new Font("고딕",Font.BOLD,13));
-        ta1.setForeground(Color.green);
-        ta.setForeground(Color.blue);
+        ta1.setForeground(Color.black);
+        ta.setForeground(Color.white);
         ta1.setOpaque(true);
-        ta.setBackground(Color.red);
+        ta.setBackground(Color.black);
         ta1.setBackground(Color.yellow);
         
+        // 텍스트 출력창에 스크롤 바 연결
         js = new JScrollPane(ta);
         
         pan1.add(js);
         pan1.add(ta1);
+        
+        JPanel bottom = new JPanel();
+        bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
+        bottom.add(tf);
+        JButton sendbtn = new JButton("전송");
+        sendbtn.setBackground(Color.white);
+        sendbtn.setForeground(Color.black);
+        bottom.add(sendbtn);
 
-        // 텍스트 출력창에 스크롤 바 연결
 
         add(top,BorderLayout.NORTH);
         // BorderLayout 배치관리자, JTextArea를 정중앙에 부착
         add(pan1, BorderLayout.CENTER);
 
         // 텍스트 필드를 하단에 부착
-        add(tf, BorderLayout.SOUTH);
+        add(bottom, BorderLayout.SOUTH);
 
         // 텍스트 필드에서 이벤트(enter)를 입력받고 해당 객체에서 이벤트 처리
         tf.addActionListener(this);
@@ -147,6 +155,23 @@ public class ChatGUIClient extends JFrame implements ActionListener, Runnable {
 						System.exit(0);
 					}
 				});
+	        	
+	        	sendbtn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// 내가 쓴 메세지를 str 변수에 저장
+				    	str = tf.getText();
+				    	if(str==""||str==null||str.equals("")){
+				    		System.out.println("Enter침");
+				    	}else{
+				    		// 변수에 저장 후 텍스트필드 초기화
+				    		tf.setText("");
+				    		// 내가 쓴 메세지 출력 -> 상대방은 br.readLine()으로 읽어들임
+				    		pw.println(str);
+				    		pw.flush();
+				    	}
+					}
+				});
 	        
         	
 
@@ -176,17 +201,19 @@ public class ChatGUIClient extends JFrame implements ActionListener, Runnable {
             		
 	        	if(str1.indexOf("member")!=-1){   //접속자 출력구문
 	        		ta1.setText("");
+	        		ta1.append("==================접속 유저 리스트=================\n");
 	        		join = str1.substring(7).replace("[", "");
 	        		join = join.replace("]", "");
+	        		join = join.replace(" ","");
 	        		joinlist = join.split(",");
 	        		list = new JList(joinlist);
         			for(int i = 0 ;i < joinlist.length ; i++)
         			{
-//        				ta1.append("접속자 : "+joinlist[i]+"\n");
-        				ta1.append("USER : "+joinlist[i]+"\n");
+        				ta1.append((i+1)+". "+joinlist[i]+"님\n");
         			}
         			
             	}else if(str1.indexOf(nick)!=-1){
+//            	}else if(str1.equals(nick)==true){
         		   ta.append("나 ====> "+str+"\n");
         		   ta.setCaretPosition(ta.getDocument().getLength());
             	}else{
@@ -201,17 +228,18 @@ public class ChatGUIClient extends JFrame implements ActionListener, Runnable {
     
     // ActionListener 메소드 오버라이딩, 입력란에서 enter입력시 실행할 코드
     public void actionPerformed(ActionEvent e) {
-        // 내가 쓴 메세지를 str 변수에 저장
-        str = tf.getText();
-
-        // 변수에 저장 후 텍스트필드 초기화
-        tf.setText("");
-
-        // 내가 쓴 메세지 출력 -> 상대방은 br.readLine()으로 읽어들임
-        pw.println(str);
-//        ta1.append(str+"\n");
-       
-        pw.flush();
+    	
+    	// 내가 쓴 메세지를 str 변수에 저장
+    	str = tf.getText();
+    	if(str==""||str==null||str.equals("")){
+    		System.out.println("Enter침");
+    	}else{
+    		// 변수에 저장 후 텍스트필드 초기화
+    		tf.setText("");
+    		// 내가 쓴 메세지 출력 -> 상대방은 br.readLine()으로 읽어들임
+    		pw.println(str);
+    		pw.flush();
+    	}
     }
     
     static JFrame frame = new JFrame("Client");
