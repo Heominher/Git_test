@@ -6,6 +6,8 @@
         <b-button variant="outline-success" @click="PlusData">Plus</b-button>
         &nspn <b-button variant="outline-success" @click="PushData">Push</b-button>
         <br><br>
+        <a href="/test"><b-button variant="outline-success">홈페이지</b-button></a>
+		<br><br>
 		<input class="inputStyle" placeholder='NO 입력하기..' type="text" v-model="n1"/>
 		<input class="inputStyle" placeholder='제목 입력하기..' type="text" v-model="n2"/>
 		<!-- <input class="inputStyle" placeholder='날짜 입력하기..' type="text" v-model="n3"/> -->
@@ -37,7 +39,10 @@
 			<button :disabled="pageNum === 0" @click="prevPage" class="page-btn">
 				이전
 			</button>
-			<span class="page-count">{{ pageNum + 1 }} / {{ pageCount }} 페이지</span>
+			<!-- <span class="page-count">{{ pageNum + 1 }} / {{ pageCount }} 페이지</span> -->
+			<ul class="ulstyle">
+				<li v-for="row in pageCount" v-bind:key="row"><a @click="thisPage(row)">{{row}}</a></li>
+			</ul>
 			<button :disabled="pageNum >= pageCount - 1" @click="nextPage" class="page-btn">
 				다음
 			</button>
@@ -68,7 +73,8 @@ export default {
 			//================페이징 변수==============//
 			pageSize: 5, //페이지 한개당 게시물 수 
 			pageNum: 0, //시작 페이지
-			totalPage: 0, //총 페이지 수
+			totalPage: 0,
+
 		}
 	},//=================데이터 선언하는 법
 
@@ -105,7 +111,7 @@ methods: {//=================함수 정의 하는 법
 		this.n3 = "";
 	},
 	fnGetList() { //데이터 가져오기 함수
-		this.axios.get('http://localhost:4000/users') 
+		this.axios.get('/users') 
 		.then(res => { // 불러온 값을 Console에 뿌려줍니다. 
 		console.log(res.data) ;
 		this.list = res.data;
@@ -117,7 +123,7 @@ methods: {//=================함수 정의 하는 법
 		params.append('n1', this.n1);
 		params.append('n2', this.n2);
 		params.append('n3', this.n3);
-		this.axios.post('http://localhost:4000/bbs/insert',params)
+		this.axios.post('/bbs/insert',params)
 		.then((Resopnse) => {
 			console.log(Resopnse);
 			alert('추가하였습니다');
@@ -145,6 +151,10 @@ methods: {//=================함수 정의 하는 법
 	finshPage () {
 		this.pageNum = this.pageCount-1;
 	},
+	thisPage (num) {
+		this.pageNum = num-1;
+	},
+	
 },//=================함수 정의 하는 법
 	
 	
@@ -203,5 +213,29 @@ computed: { //=================연산 정의 하는 법
 }
 .btn-cover .page-count {
   padding: 0 1rem;
+}
+.ulstyle{
+	list-style:none;
+	display : inline-block;
+	padding-left: 0%;
+}
+.ulstyle li{
+	display:inline-flex;
+}
+.ulstyle li a{ 
+	float:left;
+	padding:4px;
+	margin-right:3px;
+	width:15px;
+	color:#000;
+	font:bold 12px tahoma;
+	border:1px solid #eee;
+	text-align:center;
+	text-decoration:none;
+}
+.ulstyle li a:hover, .ulstyle li a:focus{
+	color:#fff;
+	border:1px solid #f40;
+	background-color:#f40;
 }
 </style>

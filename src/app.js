@@ -1,20 +1,22 @@
 var express = require('express');
 var app = express();
 const cors = require('cors');
+const fs = require('fs'); //0
+const multer = require('multer'); //1
+const path = require('path'); //1
+const mime = require('mime');
 const mapper = require('mybatis-mapper');
 
-mapper.createMapper(['C:/vuejs2-project/VueFirst_Project/src/mapper/test.xml']);
-// let test = mapper.getStatement('oracleMapper', 'selectEmpInfo', { "test": "1" }, { language: 'sql', indent: ' ' });
+app.use(cors());
 
-// console.log("@@@@@@", test);
-// var serch = require('url-search-params-polyfill');
+mapper.createMapper(['C:/vuejs2-project/VueFirst_Project/src/mapper/test.xml']);
+
 
 var bodyParser = require('body-parser');
 
-// app.use(serch);
-app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 var mysql = require('mysql');
+
 // Connection 객체 생성 
 var connection = mysql.createConnection({
     host: '127.0.0.1',
@@ -28,6 +30,9 @@ connection.connect();
 
 app.listen(4000, () => {
     console.log("server connect! port : 4000");
+    var dir = './uploadedFiles';
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir); // 2
+
 });
 
 
@@ -121,4 +126,57 @@ app.post('/bbs/update', (req, res) => { //게시물 업데이트(수정)
 
         }
     });
+});
+
+
+var storage = multer.diskStorage({ // 2
+    destination(req, file, cb) {
+        cb(null, 'uploadedFiles/');
+    },
+    filename(req, file, cb) {
+        cb(null, `${file.originalname}`);
+
+        console.log('이미지 이름은 : ' + `${file.originalname}`);
+    },
+});
+var upload = multer({ dest: 'uploadedFiles/' }); // 3-1
+var uploadWithOriginalFilename = multer({ storage: storage }); // 3-2
+
+app.post('/uploadFileWithOriginalFilename', uploadWithOriginalFilename.single('photo'), function(req, res) { // 5
+
+
+    console.log('된건가???' + req);
+    console.log('이미지가 들어갔습니다!');
+    res.status(200).send('Success Insert');
+});
+
+
+app.route('/process/download').get(function(req, res) {
+    console.log('/process/download 호출됨.');
+    try {
+        var paramFilepath = req.param('filepath');
+        var filepath = __dirname + '\\uploadedFiles\\' + paramFilepath;
+        // var filepath = 'C:/vuejs2-project/VueFirst_Project/src/uploadedFiles/chart.jpg';
+        console.log("@@@@@@@@@@@@@@@@: " + filepath);
+        var filename = path.basename(paramFilepath);
+        var mimetype = 'image/png';
+        console.log('파일 패스 : ' + filepath);
+        console.log('파일 이름 : ' + filename);
+        console.log('MIME 타입 : ' + mimetype);
+        // 파일 크기 확인
+        var stats = fs.statSync(filepath);
+        var fileSize = stats["size"];
+        console.log('파일 크기 : ' + fileSize);
+        // 클라이언트에 응답 전송
+        res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+        res.setHeader('Content-type', mimetype);
+        res.setHeader('Content-Length', fileSize);
+        var filestream = fs.createReadStream(filepath);
+        filestream.pipe(res);
+    } catch (err) {
+        console.dir(err.stack);
+        res.writeHead('400', { 'Content-Type': 'text/html;charset=utf8' });
+        res.write('<h3>파일 다운로드 실패</h3>');
+        res.end();
+    }
 });
