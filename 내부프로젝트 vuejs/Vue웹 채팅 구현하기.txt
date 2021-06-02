@@ -1,0 +1,30 @@
+채팅 구현하기
+
+//=============backend 설정==========//
+1.npm i socket.io
+
+
+2. const options = {     ==> 채팅 서버 옵션 설정
+    maxHttpBufferSize: 1e8,
+    cors: {
+        origin: '*',
+    }
+}; //1e6: 1MB
+
+3. const server = require('http').createServer(app);   ==> 채팅 서버 선언
+4. const io = require('socket.io')(server, options);   ==> 채팅 서버 선언
+5. server.listen(4000)   ==> 채팅서버 포트 할당;
+
+ 
+6. io.on('connection', client => {
+    client.on('connet', data => { winston.debug("@@@@@@" + data) });
+    client.on('event', data => { winston.debug("@@@@@@" + data) });
+    client.on('disconnect', () => { winston.debug("@@@@@@@ socket.io disconnect @@@@@@@") });
+});    ==> 클라이언트 와 커넥션 맺었을때 
+
+
+
+//=============frontend 설정==========//
+1.npm i socket.io-client    ==> 설치
+2.import io from "socket.io-client";   ===>선언
+3.const socket = io("http://localhost:4000/");   ==>선언

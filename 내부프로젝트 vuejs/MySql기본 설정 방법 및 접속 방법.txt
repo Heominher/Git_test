@@ -1,0 +1,12 @@
+1. mySql workbench 설치하기 (root 비번 꼭 기억하기!)
+
+2. window mysql설치 하기
+(https://m.blog.naver.com/PostView.nhn?blogId=wlsgud2229&logNo=221008807923&proxyReferer=https:%2F%2Fwww.google.com%2F)
+
+3. 설치 후 서버까지 실행시키기
+
+4. 그후 다시 workbench 와서 접속하기
+
+5. 스키마 생성 및 테이블 생성하기!!
+(https://medium.com/hivelab-dev/vue-express-mysql-part2-6d8fc0e497de)
+

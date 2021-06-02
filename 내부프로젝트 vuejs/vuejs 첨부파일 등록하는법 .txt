@@ -1,0 +1,43 @@
+첨부파일 등록하는법
+(https://www.a-mean-blog.com/ko/blog/%EB%8B%A8%ED%8E%B8%EA%B0%95%EC%A2%8C/_/Node-JS-Multer%EB%A1%9C-%ED%8C%8C%EC%9D%BC-%EC%97%85%EB%A1%9C%EB%93%9C)
+
+backend단
+1. npm install --save multer
+
+2. const fs = require('fs'); //0
+
+3. const multer = require('multer'); //1
+
+4. var storage = multer.diskStorage({ // 2
+    destination(req, file, cb) {
+        cb(null, 'uploadedFiles/');
+    },
+    filename(req, file, cb) {
+        cb(null, `${Date.now()}__${file.originalname}`);
+    },
+  });
+
+5.  var upload = multer({ dest: 'uploadedFiles/' });
+
+6.  var uploadWithOriginalFilename = multer({ storage: storage });
+
+7.  pp.post('/uploadFile', upload.single('attachment'), function(req, res) { // 4 
+    res.render('confirmation', { file: req.file, files: null });
+}); 
+
+8. app.post('/uploadFileWithOriginalFilename', uploadWithOriginalFilename.single('attachment'), function(req, res) { // 5
+    res.render('confirmation', { file: req.file, files: null });
+});
+
+9. app.post('/uploadFiles', upload.array('attachments'), function(req, res) { // 6
+    res.render('confirmation', { file: null, files: req.files });
+});
+
+10. app.post('/uploadFilesWithOriginalFilename', uploadWithOriginalFilename.array('attachments'), function(req, res) { // 7
+    res.render('confirmation', { file: null, files: req.files });
+});
+
+
+
+
+ 

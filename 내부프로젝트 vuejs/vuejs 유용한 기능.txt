@@ -1,0 +1,1 @@
+1. url파라미터 가져올때!! (this.$route.query.파라미터이름)

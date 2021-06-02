@@ -1,0 +1,113 @@
+axios사용법 
+
+get사용법(단순 호출용)(목록 불러올때)
+==================app.js getlist========================
+app.get('/users', function(req, res) {
+	var query = connection.query('SELECT * FROM test_crud.T_CM_BBS', function(err, rows) {
+        console.log(rows);
+        res.json(rows);
+    });
+    console.log(query);
+});
+==================app.js========================
+
+==================???.vue getlist========================
+this.axios.get('http://localhost:4000/users') 
+    .then(res => { // 불러온 값을 Console에 뿌려줍니다. 
+	console.log(res.data) ;
+	this.list = res.data
+})
+==================???.vue========================
+
+
+
+
+
+
+
+
+
+
+Post사용법(시작전 npm  install url-search-params-polyfill  --save 설치하고!!!)
+==================app.js Insert========================
+app.post('/bbs/insert', (req, res) => {  //insert 할때 방법
+    var bbsid = req.body.n1;
+    var bbstitle = req.body.n2;
+    var bbsdate = req.body.n3;
+
+    var sql = 'INSERT INTO test_crud.T_CM_BBS (bbs_id, bbs_title, bbs_date) VALUES (?,?,?)';
+
+    connection.query(sql, [bbsid, bbstitle, bbsdate], (err, result, fields) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        } else {
+            console.log('insert success');
+        }
+    });
+
+});
+==================app.js========================
+
+
+==================???.vue Insert========================
+var params = new URLSearchParams();     //insert 할때 방법
+	params.append('n1', this.n1);
+	params.append('n2', this.n2);
+	params.append('n3', this.n3);
+this.axios.post('http://localhost:4000/bbs/insert',params)
+	.then((Resopnse) => {
+		console.log(Resopnse);
+	}).catch((ex)=>{
+		console.log(ex);
+
+	})
+==================???.vue========================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==================app.js Detail========================
+app.post('/bbs/detail', (req, res) => { //상세 페이지 들어정보 가져오기
+
+    var bbsid = req.body.bbsid;
+
+    var sql = 'SELECT * FROM test_crud.T_CM_BBS WHERE bbs_id = ?';
+
+    connection.query(sql, [bbsid], (err, result, fields) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        } else {
+            console.log(result);
+            res.json(result);
+            console.log('insert success');
+
+        }
+    });
+});
+==================app.js========================
+
+
+==================???.vue Detail========================
+ var params = new URLSearchParams();
+	params.append('bbsid', this.bbs);
+	this.axios.post('http://localhost:4000/bbs/detail',params)			
+	.then((Resopnse) => {
+		console.log(Resopnse);
+		this.dd = Resopnse.data;
+	})
+	.catch((ex)=>{
+		console.log(ex);
+	})
+==================???.vue========================
