@@ -1,8 +1,0 @@
-1. npm install mybatis-mapper --save 설치
-2. app.js에 const mapper = require('mybatis-mapper'); (사용선언)
-3. 파일에 xml파일 만들기
-4. app.js에 mapper.createMapper(['C:/vuejs2-project/stdiz/backend/mapper/StandardTerm.xml']);  --> 경로 추가해주기
-5. var seletbbs = mapper.getStatement('standardTermMapper', 'selectTermList', { "wordNm": wordNm, "wordEngNm": wordEngNm, "wordAbrvNm": wordAbrvNm, "se": se, "prjectNm": prjectNm }, { language: 'sql', indent: ' ' });  -->위와 같은 형식으로 사용하기
-
-
-참고 url : (https://meyouus.tistory.com/92)
